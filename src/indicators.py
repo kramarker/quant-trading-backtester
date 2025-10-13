@@ -30,8 +30,9 @@ def rolling_volatility(series: pd.Series, window: int = 20) -> pd.Series:
 def add_indicators(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
 
-    out["SMA_20"] = sma(out["Price"], 20)
-    out["SMA_50"] = sma(out["Price"], 50)
+    for window in [10, 15, 20, 30, 50, 100, 150, 200]:
+        out[f"SMA_{window}"] = sma(out["Price"], window)
+
     out["EMA_12"] = ema(out["Price"], 12)
     out["EMA_26"] = ema(out["Price"], 26)
     out["RSI_14"] = rsi(out["Price"], 14)

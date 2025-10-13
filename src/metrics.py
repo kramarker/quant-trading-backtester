@@ -22,6 +22,13 @@ def annualized_volatility(strategy_returns: pd.Series) -> float:
     return strategy_returns.std() * np.sqrt(TRADING_DAYS)
 
 
+def downside_volatility(strategy_returns: pd.Series) -> float:
+    downside = strategy_returns[strategy_returns < 0]
+    if len(downside) == 0:
+        return np.nan
+    return downside.std() * np.sqrt(TRADING_DAYS)
+
+
 def sharpe_ratio(strategy_returns: pd.Series, risk_free_rate: float = 0.0) -> float:
     vol = strategy_returns.std()
     if vol == 0 or pd.isna(vol):
@@ -32,10 +39,30 @@ def sharpe_ratio(strategy_returns: pd.Series, risk_free_rate: float = 0.0) -> fl
     return (excess_return / vol) * np.sqrt(TRADING_DAYS)
 
 
+def sortino_ratio(strategy_returns: pd.Series, risk_free_rate: float = 0.0) -> float:
+    downside_vol = downside_volatility(strategy_returns)
+    if downside_vol == 0 or pd.isna(downside_vol):
+        return np.nan
+
+    daily_rf = risk_free_rate / TRADING_DAYS
+    excess_return = strategy_returns.mean() - daily_rf
+    return (excess_return / (downside_vol / np.sqrt(TRADING_DAYS))) * np.sqrt(TRADING_DAYS)
+
+
 def max_drawdown(portfolio_value: pd.Series) -> float:
     running_max = portfolio_value.cummax()
     drawdown = portfolio_value / running_max - 1
     return drawdown.min()
+
+
+def calmar_ratio(portfolio_value: pd.Series) -> float:
+    ann_ret = annualized_return(portfolio_value)
+    mdd = max_drawdown(portfolio_value)
+
+    if mdd == 0 or pd.isna(mdd):
+        return np.nan
+
+    return ann_ret / abs(mdd)
 
 
 def trade_statistics(trades_df: pd.DataFrame) -> dict:
@@ -64,6 +91,7 @@ def trade_statistics(trades_df: pd.DataFrame) -> dict:
 def summarize_performance(
     strategy_name: str,
     ticker: str,
+    sample_period: str,
     results_df: pd.DataFrame,
     trades_df: pd.DataFrame
 ) -> dict:
@@ -75,11 +103,15 @@ def summarize_performance(
     summary = {
         "ticker": ticker,
         "strategy": strategy_name,
+        "sample_period": sample_period,
         "total_return": float(total_return(portfolio_value)),
         "annualized_return": float(annualized_return(portfolio_value)),
         "annualized_volatility": float(annualized_volatility(strategy_returns)),
+        "downside_volatility": float(downside_volatility(strategy_returns)),
         "sharpe_ratio": float(sharpe_ratio(strategy_returns)),
+        "sortino_ratio": float(sortino_ratio(strategy_returns)),
         "max_drawdown": float(max_drawdown(portfolio_value)),
+        "calmar_ratio": float(calmar_ratio(portfolio_value)),
     }
 
     summary.update(trade_stats)

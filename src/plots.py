@@ -14,7 +14,7 @@ def plot_price_with_signals(
 
     fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(df.index, df["Price"], label="Price")
-    
+
     if "SMA_20" in df.columns:
         ax.plot(df.index, df["SMA_20"], label="SMA 20")
     if "SMA_50" in df.columns:
@@ -76,6 +76,57 @@ def plot_drawdown(
     ax.set_ylabel("Drawdown")
     ax.grid(True, alpha=0.3)
     ax.legend()
+
+    plt.tight_layout()
+    plt.savefig(save_path)
+    plt.close()
+
+
+def plot_strategy_comparison(summary_df: pd.DataFrame, save_path: str) -> None:
+    Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+
+    plot_df = summary_df.copy()
+    plot_df["label"] = (
+        plot_df["ticker"] + " | " + plot_df["strategy"] + " | " + plot_df["sample_period"]
+    )
+
+    fig, ax = plt.subplots(figsize=(14, 7))
+    ax.bar(plot_df["label"], plot_df["sharpe_ratio"])
+
+    ax.set_title("Sharpe Ratio by Ticker / Strategy / Sample")
+    ax.set_xlabel("Configuration")
+    ax.set_ylabel("Sharpe Ratio")
+    ax.tick_params(axis="x", rotation=90)
+    ax.grid(True, axis="y", alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig(save_path)
+    plt.close()
+
+
+def plot_ma_heatmap(optimization_df: pd.DataFrame, ticker: str, save_path: str) -> None:
+    Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+
+    pivot = optimization_df.pivot(
+        index="short_window",
+        columns="long_window",
+        values="sharpe_ratio"
+    )
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    im = ax.imshow(pivot.values, aspect="auto")
+
+    ax.set_xticks(range(len(pivot.columns)))
+    ax.set_xticklabels(pivot.columns)
+    ax.set_yticks(range(len(pivot.index)))
+    ax.set_yticklabels(pivot.index)
+
+    ax.set_title(f"{ticker} MA Optimization Heatmap (Sharpe Ratio)")
+    ax.set_xlabel("Long Window")
+    ax.set_ylabel("Short Window")
+
+    cbar = plt.colorbar(im, ax=ax)
+    cbar.set_label("Sharpe Ratio")
 
     plt.tight_layout()
     plt.savefig(save_path)
