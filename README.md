@@ -1,4 +1,11 @@
-# Quant Trading Strategy Backtester
+# Quantitative Trading Strategy Backtester & Cross-Asset Generalization Study
+
+Finalized implementation including:
+- Multi-strategy backtesting (MA, RSI, Bollinger Bands)
+- Train/test evaluation framework
+- Cross-asset generalization research pipeline
+- Performance metrics (Sharpe, Sortino, drawdown, etc.)
+- Visualization outputs (equity curves, heatmaps)
 
 ## Overview
 This project implements a quantitative trading research pipeline for evaluating systematic trading strategies on historical daily equity and ETF data.
