@@ -1,122 +1,121 @@
 # Quantitative Trading Strategy Backtester & Cross-Asset Generalization Study
 
-Finalized implementation including:
-- Multi-strategy backtesting (MA, RSI, Bollinger Bands)
-- Train/test evaluation framework
-- Cross-asset generalization research pipeline
-- Performance metrics (Sharpe, Sortino, drawdown, etc.)
-- Visualization outputs (equity curves, heatmaps)
-
 ## Overview
-This project implements a quantitative trading research pipeline for evaluating systematic trading strategies on historical daily equity and ETF data.
 
-It includes:
-- Multiple assets: SPY, QQQ, AAPL
-- Multiple strategies:
-  - Moving Average Crossover
-  - RSI Mean Reversion
-  - Bollinger Mean Reversion
-  - Buy and Hold benchmark
-- Train/Test split for out-of-sample evaluation
-- Parameter optimization for moving-average windows
-- Risk-adjusted performance metrics
-- Automated result and plot generation
+This project implements a multi-strategy quantitative trading backtesting system with an extension into cross-asset generalization research.
+
+Key features:
+- Multi-strategy framework (Moving Average, RSI, Bollinger Bands)
+- Train/Test evaluation pipeline
+- Parameter optimization (MA crossover)
+- Risk-adjusted performance metrics (Sharpe, Sortino, drawdown, etc.)
+- Cross-asset generalization analysis (train on SPY, evaluate on QQQ/AAPL)
 
 ---
 
 ## Data
+
 The project uses daily historical OHLCV data from Yahoo Finance.
 
-Current tested assets:
+Tested assets:
 - **SPY**: S&P 500 ETF proxy
 - **QQQ**: Nasdaq-100 ETF proxy
-- **AAPL**: individual equity
+- **AAPL**: Individual equity
 
-This project currently evaluates **daily stock/ETF data**, not futures or options.
+This project evaluates **daily stock/ETF data**, not futures or options.
 
 ---
 
 ## Strategies
 
-### 1. Moving Average Crossover
-- Long when short SMA > long SMA
-- Exit when short SMA <= long SMA
-- Parameters optimized using grid search on the training set
+### Moving Average Crossover
+- Long when short SMA > long SMA  
+- Exit when short SMA <= long SMA  
+- Parameters optimized using grid search on the training set  
 
-### 2. RSI Mean Reversion
-- Enter when RSI < 30
-- Exit when RSI > 55
+### RSI Mean Reversion
+- Enter when RSI < 30  
+- Exit when RSI > 55  
 
-### 3. Bollinger Mean Reversion
-- Enter when price falls below the lower Bollinger Band
-- Exit when price reverts above the rolling mean
+### Bollinger Mean Reversion
+- Enter when price falls below lower Bollinger Band  
+- Exit when price reverts above rolling mean  
 
-### 4. Buy and Hold
-- Benchmark strategy with continuous exposure
+### Buy and Hold
+- Benchmark strategy with continuous exposure  
 
 ---
 
 ## Methodology
 
 ### Train/Test Split
-- 70% training sample
-- 30% test sample
-- MA parameters optimized on training data only
-- Performance evaluated both in-sample and out-of-sample
+- 70% training sample  
+- 30% test sample  
+- MA parameters optimized on training data only  
+- Performance evaluated both in-sample and out-of-sample  
 
 ### Optimization
 The moving-average strategy is optimized across multiple short/long window combinations using Sharpe ratio as the objective.
 
 ### Metrics
-Performance is evaluated using:
-- Total Return
-- Annualized Return
-- Annualized Volatility
-- Downside Volatility
-- Sharpe Ratio
-- Sortino Ratio
-- Max Drawdown
-- Calmar Ratio
+
+Performance metrics:
+- Total Return  
+- Annualized Return  
+- Annualized Volatility  
+- Downside Volatility  
+- Sharpe Ratio  
+- Sortino Ratio  
+- Max Drawdown  
+- Calmar Ratio  
 
 Trade-level metrics:
-- Number of Trades
-- Win Rate
-- Average Trade Return
-- Best/Worst Trade Return
-- Average Holding Days
+- Number of Trades  
+- Win Rate  
+- Average Trade Return  
+- Best/Worst Trade Return  
+- Average Holding Days  
 
-Note: trade-level statistics for Buy and Hold are less informative than for active strategies because the benchmark maintains continuous exposure.
-
----
-
-## Configurability
-The backtest window is configurable using a rolling lookback period, and the end date automatically updates to the current date at runtime.
+Note: trade-level statistics for Buy and Hold are less informative due to continuous exposure.
 
 ---
 
-## Example Visuals
+## Sample Results
 
-### Strategy Comparison
-![Strategy Comparison](assets/strategy_comparison_sharpe.png)
+### Strategy Performance Comparison
+![Strategy Comparison](assets/generalization_sharpe.png)
 
-### Example Equity Curve
-![Example Equity Curve](assets/example_equity_curve.png)
+### Total Return Across Assets
+![Total Return](assets/generalization_total_return.png)
 
-### MA Optimization Heatmap
-![MA Heatmap](assets/SPY_ma_heatmap.png)
+### MA Parameter Optimization Heatmap
+![MA Heatmap](assets/ma_generalization_heatmap.png)
+
+---
+
+## Cross-Asset Generalization Insight
+
+This project extends beyond standard backtesting by evaluating whether strategies trained on one asset (SPY) generalize to others (QQQ, AAPL).
+
+Key findings:
+- Mean-reversion strategies (RSI, Bollinger) show more stable cross-asset performance  
+- Moving average strategies are sensitive to parameter selection  
+- Buy-and-hold achieves higher total returns but with larger drawdowns  
+- Strategy robustness varies significantly across assets  
 
 ---
 
 ## Output Files
-The project generates:
-- cleaned summary metrics
-- raw summary metrics
-- parameter optimization tables
-- daily backtest result CSVs
-- trade logs
-- plots for signals, equity curves, drawdowns, and optimization
 
-Main outputs:
+Generated outputs include:
+- Cleaned summary metrics  
+- Raw summary metrics  
+- Parameter optimization tables  
+- Daily backtest result CSVs  
+- Trade logs  
+- Visualization plots  
+
+Key files:
 - `results/summary_metrics_clean.csv`
 - `results/summary_metrics_raw.csv`
 - `results/<TICKER>_ma_optimization.csv`
@@ -125,17 +124,19 @@ Main outputs:
 ---
 
 ## Tech Stack
-- Python
-- pandas
-- numpy
-- matplotlib
-- yfinance
+
+- Python  
+- pandas  
+- numpy  
+- matplotlib  
+- yfinance  
 
 ---
 
 ## Potential Future Improvements
-- additional strategies
-- portfolio-level backtesting
-- walk-forward optimization
-- transaction cost sensitivity analysis
-- intraday/futures-specific extensions
+
+- Additional strategies  
+- Portfolio-level backtesting  
+- Walk-forward optimization  
+- Transaction cost modeling  
+- Intraday and futures extensions  
