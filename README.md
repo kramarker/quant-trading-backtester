@@ -13,6 +13,16 @@ Key features:
 
 ---
 
+## Research Paper
+ 
+**Do Technical Trading Strategies Generalize Across Assets?**  
+An empirical study on cross-asset transferability of technical strategies.
+
+[Read the full paper](research/Mark_Antar_Cross_Asset_Generalization.pdf)
+
+This paper analyzes cross-asset generalization of technical trading strategies,
+including formal problem definition, empirical results, and overfitting analysis.
+
 ## Data
 
 The project uses daily historical OHLCV data from Yahoo Finance.
