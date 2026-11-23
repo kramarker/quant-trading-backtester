@@ -1,0 +1,4 @@
+ticker,num_folds,oos_start,oos_end,oos_total_return,oos_sharpe,oos_max_drawdown,buy_hold_total_return,buy_hold_sharpe,buy_hold_max_drawdown,pct_folds_beating_buy_hold,distinct_window_pairs_chosen
+SPY,11,2023-03-30,2026-01-02,0.5167,1.3758,-0.1022,0.764,1.4336,-0.1876,0.3636,6
+QQQ,11,2023-03-30,2026-01-02,0.8163,1.4096,-0.1356,0.9929,1.3698,-0.2277,0.5455,4
+AAPL,11,2023-03-30,2026-01-02,0.6207,1.1257,-0.1413,0.7085,0.8843,-0.3336,0.4545,3

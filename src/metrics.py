@@ -31,7 +31,8 @@ def downside_volatility(strategy_returns: pd.Series) -> float:
 
 def sharpe_ratio(strategy_returns: pd.Series, risk_free_rate: float = 0.0) -> float:
     vol = strategy_returns.std()
-    if vol == 0 or pd.isna(vol):
+    # Treat floating-point noise on a constant series as zero volatility.
+    if pd.isna(vol) or vol < 1e-12:
         return np.nan
 
     daily_rf = risk_free_rate / TRADING_DAYS
